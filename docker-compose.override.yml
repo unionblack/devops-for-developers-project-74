@@ -6,9 +6,20 @@ services:
       context: .
       dockerfile: Dockerfile
     command: make dev
-    ports:
-      - "8080:8080"
+    environment:
+      - HOST=0.0.0.0
+      - APP_HOST=0.0.0.0
     volumes:
       - ./app:/app
       - /app/node_modules
 
+  caddy:
+    image: caddy:2.7-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Монтируем локальную папку caddy внутрь контейнера по совету из документации
+      - ./services/caddy:/etc/caddy
+    depends_on:
+      - app
