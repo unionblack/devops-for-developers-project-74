@@ -12,6 +12,9 @@ services:
     volumes:
       - ./app:/app
       - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
 
   caddy:
     image: caddy:2.7-alpine
@@ -19,7 +22,6 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      # Монтируем локальную папку caddy внутрь контейнера по совету из документации
       - ./services/caddy:/etc/caddy
     depends_on:
       - app
